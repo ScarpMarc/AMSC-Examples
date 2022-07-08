@@ -1,0 +1,6 @@
+Examples/Makefile.inc
+*.o
+*.bak
+*~
+*.so
+*.a

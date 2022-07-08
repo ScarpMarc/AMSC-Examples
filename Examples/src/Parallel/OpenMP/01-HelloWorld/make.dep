@@ -1,0 +1,2 @@
+main_hello_world_simple.o: main_hello_world_simple.cpp
+main_hello_world_advanced.o: main_hello_world_advanced.cpp
