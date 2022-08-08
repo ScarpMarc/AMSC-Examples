@@ -1,0 +1,4 @@
+[submodule "Examples/src/Utilities/json"]
+	path = Examples/src/Utilities/json
+	url = git@github.com:lformaggia/json.git
+	branch = AMSC

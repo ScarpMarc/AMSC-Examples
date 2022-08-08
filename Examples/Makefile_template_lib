@@ -6,9 +6,9 @@
 #
 ############################################################
 #
-# The environmental variable PACS_ROOT should be set to the
+# The environmental variable AMSC_ROOT should be set to the
 # root directory where the examples reside. In practice, the directory
-# where this file is found. The resolution of PACS_ROOT is made in the
+# where this file is found. The resolution of AMSC_ROOT is made in the
 # Makefile.h file, where other important variables are also set.
 # The only user defined variable that must be set in this file is
 # the one indicating where Makefile.h resides
@@ -31,7 +31,7 @@ STATIC_LIBFILE=lib$(LIBNAME).a
 
 LIBRARIES+=-L. -l$(LIBNAME)
 LDLIBS+=$(LIBRARIES)
-INCLUDES=-I. -I$(PACS_INC_DIR)
+INCLUDES=-I. -I$(AMSC_INC_DIR)
 
 ifeq ($(LIBTYPE),DYNAMIC)
  CXXFLAGS+=-fPIC
@@ -124,8 +124,8 @@ exec: $(EXEC)
 library:  $(LIBRARY)
 
 install:
-	cp $(HEADERS) $(PACS_INC_DIR)
-	cp $(STATIC_LIBFILE) $(DYNAMIC_LIBFILE) $(PACS_LIB_DIR)
+	cp $(HEADERS) $(AMSC_INC_DIR)
+	cp $(STATIC_LIBFILE) $(DYNAMIC_LIBFILE) $(AMSC_LIB_DIR)
 clean:
 	$(RM) -f $(EXEC) $(OBJS)
 

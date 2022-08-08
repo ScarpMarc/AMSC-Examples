@@ -20,7 +20,7 @@
 #
 
 # The directory where the examples reside (you HAVE to change this)
-AMSC_ROOT?=/home/forma/sandbox/C++/hpc/Examples
+AMSC_ROOT?=~/Work/HPC_Courses/Material/AMSC-Examples/Examples/
 # The directory with the Eigen (leave blank if they are in a standard directory)
 mkEigenInc?=/usr/local/include/eigen3/
 EIGEN_DIR=$(mkEigenInc)
@@ -88,8 +88,10 @@ DEFINES=
 
 WARNFLAGS=-Wall -Wextra -Wsuggest-override -Wnon-virtual-dtor
 #
-# Optimization flags : May be selected by using the variable RELEASE
+# Optimization flags : May be selected by using the variable DEBUG
 #
+# DEBUG=no  -> OPTFLAGS=-O3
+# DEBUG=yes -> OPTFLAGS=-g
 # -c       compile only, generate corresponding .o files
 # -g       generate code suitable for the debugger
 # -p       generate code suitable for the profiler
@@ -102,28 +104,18 @@ export DOXYFILE=$(AMSC_ROOT)/DoxyfileCommon
 # ************ END USER MODIFIABLE PART *****************
 ##
 
-ifdef RELEASE
-DEBUG=no
-else
-DEBUG=yes
-endif
 
-ifeq ($(DEBUG),yes)
-  OPTFLAGS=-g
-# If debugging we use the local dynamic libraries and avoid ldconfig -d
-# or setting LD_LIBRARY_PATH
-  LDFLAGS=-Wl,-rpath=. -Wl,-rpath=$(AMSC_ROOT)/lib# 
-else
-  # Since aa 18-19 I have decided to indicate the libraries even if DEBUG=no.
-  # Remember however that normally release code does not have hardwired in the
-  # executables the directories where the loader looks for libraries.
-  # You take the responsibility of installing them in the right place.
-  # But here I want to avoid students messing around with LD_LIBRARY_PATH
-  # or ldconfig.
-  LDFLAGS=-Wl,-rpath=. -Wl,-rpath=$(AMSC_ROOT)/lib#
+
+ifeq ($(DEBUG),no)
   OPTFLAGS=-O3 -funroll-loops #maybe you want -O3
   DEFINES+=-DNDEBUG
+else
+  OPTFLAGS=-g
 endif
+
+#To simplify linking with local libraries
+LDFLAGS=-Wl,-rpath=. -Wl,-rpath=$(AMSC_ROOT)/lib#
+
 # Add verbosity if needed
 ifeq ($(VERBOSE),yes)
   VERBOSITY=-DVERBOSE
@@ -138,13 +130,13 @@ STANDARD=c++20
 #
 export STDFLAGS=-std=$(STANDARD)
 #
-# PACS libraries are stored here
+#  libraries are stored here
 #
-export AMSC_LIB_DIR=$(APSC_ROOT)/lib
+export AMSC_LIB_DIR=$(AMSC_ROOT)/lib
 #
-# Main APSC include directory
+# Main AMSC include directory
 #
-export APSC_INC_DIR=$(APSC_ROOT)/include
+export AMSC_INC_DIR=$(AMSC_ROOT)/include
 #
 # Other directories with libraries (if needed)
 #
@@ -159,14 +151,14 @@ export CXX
 # Compose options
 #
 # collect all includes
-ALL_INC_DIR= $(APSC_INC_DIR) $(OTHER_INC_DIR) $(EIGEN_DIR)
+ALL_INC_DIR= $(AMSC_INC_DIR) $(OTHER_INC_DIR) $(EIGEN_DIR)
 includes := $(foreach inc,$(ALL_INC_DIR),-I$(inc) )
 # where to look for include files:
 # first the current directory, then the directory ./include
 # and then the possible other specifyed in OTHER_INC_DIR
 INCLS  = -I. -I./include $(includes) 
 # collect all library dirs
-ALL_LIB_DIR=$(APSC_LIB_DIR) $(OTHER_LIB_DIR)
+ALL_LIB_DIR=$(AMSC_LIB_DIR) $(OTHER_LIB_DIR)
 LIBD := $(foreach lib,$(ALL_LIB_DIR),-L$(lib) )
 #
 # Set make macros
