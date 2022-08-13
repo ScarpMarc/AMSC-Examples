@@ -1,4 +1,4 @@
-############################################################
+###########################################################
 #
 # An example of Makefile for the course on 
 # Advanced Programming for Scientific Computing
@@ -6,14 +6,14 @@
 #
 ############################################################
 #
-# The environmental variable PACS_ROOT should be set to the
+# The environmental variable AMSC_ROOT should be set to the
 # root directory where the examples reside. In practice, the directory
-# where this file is found. The resolution of PACS_ROOT is made in the
+# where this file is found. The resolution of AMSC_ROOT is made in the
 # Makefile.h file, where other important variables are also set.
 # The only user defined variable that must be set in this file is
 # the one indicating where Makefile.h resides
 
-MAKEFILEH_DIR=../../../../
+MAKEFILEH_DIR=../../
 #
 include $(MAKEFILEH_DIR)/Makefile.inc
 #
@@ -66,3 +66,7 @@ $(DEPEND): $(SRCS)
 	done
 
 -include $(DEPEND)
+
+
+
+

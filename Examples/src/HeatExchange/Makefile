@@ -6,14 +6,14 @@
 #
 ############################################################
 #
-# The environmental variable PACS_ROOT should be set to the
+# The environmental variable AMSC_ROOT should be set to the
 # root directory where the examples reside. In practice, the directory
-# where this file is found. The resolution of PACS_ROOT is made in the
+# where this file is found. The resolution of AMSC_ROOT is made in the
 # Makefile.h file, where other important variables are also set.
 # The only user defined variable that must be set in this file is
 # the one indicating where Makefile.h resides
 
-MAKEFILEH_DIR=../../../../
+MAKEFILEH_DIR=../../
 #
 include $(MAKEFILEH_DIR)/Makefile.inc
 #
@@ -45,12 +45,11 @@ EXEC=$(exe_sources:.cpp=)
 all: $(DEPEND) $(EXEC)
 
 clean:
-	$(RM) -f $(EXEC) $(OBJS)
+	$(RM) -f $(EXEC) $(OBJS)  *.out *.bak *~ *.aux *.log heat_exchange.pdf
 
 distclean:
 	$(MAKE) clean
-	$(RM) -f ./doc $(DEPEND)
-	$(RM) *.out *.bak *~
+	$(RM) -f ./doc $(DEPEND) result.dat
 
 doc:
 	doxygen $(DOXYFILE)
@@ -60,9 +59,13 @@ $(EXEC): $(OBJS)
 $(OBJS): $(SRCS)
 
 $(DEPEND): $(SRCS)
-	$(RM) $(DEPEND)
+	-\rm $(DEPEND)
 	for f in $(SRCS); do \
 	$(CXX) $(STDFLAGS) $(CPPFLAGS) -MM $$f >> $(DEPEND); \
 	done
 
 -include $(DEPEND)
+
+
+
+

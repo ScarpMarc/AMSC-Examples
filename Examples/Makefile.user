@@ -20,7 +20,7 @@
 #
 
 # The directory where the examples reside (you HAVE to change this)
-AMSC_ROOT?=~/Work/HPC_Courses/Material/AMSC-Examples/Examples/
+AMSC_ROOT?=/home/forma/Work/HPC_Courses/Material/AMSC-Examples/Examples/
 # The directory with the Eigen (leave blank if they are in a standard directory)
 mkEigenInc?=/usr/local/include/eigen3/
 EIGEN_DIR=$(mkEigenInc)
@@ -62,6 +62,17 @@ CXX = ${mkCxxCompiler}
 mkCCompiler?=gcc
 CC = ${mkCCompiler}
 
+mkMpiCCompiler?=mpicc
+MPI_CC=$mkMpiCCompiler
+
+mkMpiCxxCompiler?=mpic++
+MPI_CXX=$mkMpiCCompiler
+
+MPI_RUN=mpirun --use-hwthread-cpus
+
+
+
+
 # Since we are only using c++ I set the linker LINK.o for object files
 # so that it uses the c++ compiler. Make has no separate macro for the linker!
 LINK.o = $(CXX) $(LDFLAGS) $(TARGET_ARCH)
@@ -86,7 +97,8 @@ DEFINES=
 # -Wnon-virtual-dtor Warns if a class with virtual meths oda does not have virt dstructors
 # -Weffc++ Wanrs about violation of the coding style in Scott Mayer's Effective C++
 
-WARNFLAGS=-Wall -Wextra -Wsuggest-override -Wnon-virtual-dtor
+# I eliminate some warnings to avoid complaints when compiling with MPI
+WARNFLAGS=-Wall -Wextra -Wno-suggest-override -Wnon-virtual-dtor -Wno-cast-function-type
 #
 # Optimization flags : May be selected by using the variable DEBUG
 #

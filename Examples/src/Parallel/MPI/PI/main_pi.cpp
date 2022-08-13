@@ -1,10 +1,15 @@
 #include <mpi.h>
 #include <omp.h>
 
+#include "GetPot"
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 
+/*
+ * We use here the native MPI tools for timings (with a little trick to create
+ * tic and toc like in Matlab)
+ */
 static double c_start, c_diff;
 #define tic() c_start = MPI_Wtime();
 #define toc(x)                                       \
@@ -13,6 +18,19 @@ static double c_start, c_diff;
     std::cout << x << c_diff << " [s]" << std::endl; \
   }
 
+void
+printHelp()
+{
+  std::cout << "To run the program\n";
+  std::cout << "mpirun -n num_proc ./main_pi -n <number_of_elemts> -t "
+               "<number_of_threads>\n";
+  std::cout
+    << "num_proc: the number of processes used by MPI,\n"
+    << "number_of_elemts: The number of elements for the integration, use a "
+       "big number. default: 1e9)\n"
+    << "number_of_threads: number of threads in the openMP part. default:2"
+    << std::endl;
+}
 /**
  * This exercise presents a simple program to determine the value of pi. The
  * algorithm suggested here is chosen for its simplicity. The method evaluates
@@ -36,20 +54,38 @@ main(int argc, char **argv)
 
   int mpi_size;
   MPI_Comm_size(mpi_comm, &mpi_size);
-
+  unsigned int n;
+  bool         stop{false};
+  unsigned int num_t{1u};
 #pragma omp parallel master
   if(mpi_rank == 0)
-    std::cout << "Number of processes: " << mpi_size
-              << ", number of threads: " << omp_get_num_threads() << std::endl;
+    {
+      GetPot gp(argc, argv);
+      if(gp.search(2, "-h", "--help"))
+        {
+          printHelp();
+          stop = true;
+        }
+      n = gp.follow(1000000000u, "-n");
+      num_t = gp.follow(2u, "-t");
+      std::cout << "Number of Intervals: " << n << " ";
+      std::cout << "Number of processes: " << mpi_size
+                << ", number of threads: " << num_t << std::endl;
+    }
+
+  if(stop)
+    {
+      MPI_Abort(mpi_comm, 0);
+      return 0;
+    }
 
   tic();
-
-  const unsigned int n = 1e9;
-  const double       h = 1.0 / n;
+  MPI_Bcast(&n, 1, MPI_UNSIGNED, 0, mpi_comm);
+  const double h = 1.0 / n;
 
   double sum = 0.0;
 
-#pragma omp parallel for reduction(+ : sum)
+#pragma omp parallel for num_threads(num_t) reduction(+ : sum)
   for(unsigned int i = mpi_rank; i < n; i += mpi_size)
     {
       const double x = h * (i + 0.5);
