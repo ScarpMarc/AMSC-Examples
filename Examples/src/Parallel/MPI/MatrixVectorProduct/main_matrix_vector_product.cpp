@@ -46,10 +46,8 @@ main(int argc, char **argv)
   int mpi_size;
   MPI_Comm_size(mpi_comm, &mpi_size);
 
-#pragma omp parallel master
   if(mpi_rank == 0)
-    std::cout << "Number of processes: " << mpi_size
-              << ", number of threads: " << omp_get_num_threads() << std::endl;
+    std::cout << "Number of processes: " << mpi_size << std::endl;
 
   // Set to true to print matrix, vector and result.
   const bool print = false;
@@ -70,7 +68,7 @@ main(int argc, char **argv)
   // processor and the offset index where to start writing them into.
   std::vector<int> recv_counts;
   std::vector<int> recv_start_idx;
-
+  int num_threads;
   if(mpi_rank == 0)
     {
       std::cout << std::endl << "Enter the number of matrix rows:" << std::endl;
@@ -96,10 +94,17 @@ main(int argc, char **argv)
         }
 
       std::cout << std::endl;
+
+      std::cout << "Enter the number of openMP threads:" << std::endl;
+      std::cout << "(the actual number used can be different to to hardware limitations)\n";
+      std::cin >> num_threads;
+
+
     }
 
   MPI_Bcast(&n_rows, 1, MPI_INT, 0, mpi_comm);
   MPI_Bcast(&n_cols, 1, MPI_INT, 0, mpi_comm);
+  MPI_Bcast(&num_threads, 1, MPI_INT, 0, mpi_comm);
 
   rhs.resize(n_cols);
   if(mpi_rank == 0)
@@ -127,7 +132,7 @@ main(int argc, char **argv)
 
       // Generate matrix.
       matrix.resize(n_rows * n_cols);
-#pragma omp parallel for shared(matrix)
+#pragma omp parallel for shared(matrix) num_threads(num_threads)
       for(auto &m : matrix)
         m = rand(engine);
 
@@ -144,7 +149,7 @@ main(int argc, char **argv)
           std::cout << std::endl;
         }
 
-#pragma omp parallel for shared(rhs)
+#pragma omp parallel for shared(rhs) num_threads(num_threads)
       // Generate rhs.
       for(auto &v : rhs)
         v = rand(engine);
@@ -205,7 +210,7 @@ main(int argc, char **argv)
     }
 
   tic();
-#pragma omp parallel for shared(result_local)
+#pragma omp parallel for shared(result_local) num_threads(num_threads)
   for(unsigned int i = 0; i < n_rows_local; ++i)
     {
       for(unsigned int j = 0; j < n_cols; ++j)

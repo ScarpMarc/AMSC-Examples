@@ -55,8 +55,6 @@ distclean:
 doc:
 	doxygen $(DOXYFILE)
 
-$(EXEC): %: %.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $< $(LIBS) -o $@
 
 $(DEPEND): $(SRCS)
 	$(RM) $(DEPEND)

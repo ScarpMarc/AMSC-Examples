@@ -1,0 +1,18 @@
+{
+"problemData":
+{
+"h": 0.1,
+"y0":0.1
+},
+"solverData":
+{
+"solver":"crankNicolson",
+"nonlinearSolver":"broyden",
+"parameters":
+{
+"MaxIt":300,
+"Tol":1.0e-9
+}
+}
+}
+

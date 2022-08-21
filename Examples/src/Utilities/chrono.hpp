@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <ratio>
 
 namespace Timings
 {
@@ -54,16 +55,16 @@ namespace Timings
     double wallTime() const
       {
         using namespace std::chrono;
-        auto time_span = duration_cast<nanoseconds>(stopTime - startTime);
-        return time_span.count() / 1000.;
+        auto time_span = std::chrono::duration<double,std::micro>(stopTime - startTime);
+        return time_span.count();
       }
 
     //! Outputs wall time between last start and now! (in microseconds)
     double wallTimeNow() const
       {
         using namespace std::chrono;
-        auto time_span = duration_cast<nanoseconds>(MyClock::now() - startTime);
-        return time_span.count() / 1000.;
+        auto time_span = std::chrono::duration<double,std::micro>(MyClock::now() - startTime);
+        return time_span.count();
       }  
   };
   

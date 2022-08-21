@@ -3,11 +3,11 @@
 #include <iostream>
 
 int
-main(int argc, char **argv)
+main()
 {
   std::cout << "Hello World!" << std::endl;
 
-#pragma omp parallel
+#pragma omp parallel num_threads(8)
   {
     std::cout << "Hello World (this time in parallel!)" << std::endl;
   }

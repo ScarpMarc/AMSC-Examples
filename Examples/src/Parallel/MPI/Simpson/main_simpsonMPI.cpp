@@ -20,7 +20,7 @@ int main ()
   // This tuple is here to pack some data
   std::tuple<double,double,double,unsigned int> databuf;
   // I use a function wrapper to wrap the function
-  std::function<double (double const &)> f=[](double const & x){return std::sin(x);};
+  std::function<double (double const &)> f=[](double const & x){return std::sin(x)*x*x;};
   MPI_Init(nullptr,nullptr);
   MPI_Comm mpi_comm=MPI_COMM_WORLD;
   MPI_Comm_rank(mpi_comm,&my_rank);
@@ -34,14 +34,14 @@ int main ()
     {
       // Opening the file with data.
       // Read from a file
-      std::ifstream ifile("data.json");
-      using json=nlohmann::json;
-      json j1;
-      ifile >>j1;
-      ifile.close();
+      std::ifstream ifile("data.json");//open file
+      using json=nlohmann::json;// to make life easier
+      json j1;// create a json object
+      ifile >>j1;//load the file in the json object
+      ifile.close();// close file
       // Extract data. you need to use get<type> to select the type
-      // Alternatively, you may use the utility extract
-      auto a = j1["a"].get<double>();
+      // Alternatively, you may use the utility value
+      auto a = j1["a"].get<double>();// get data from json object
       auto b = j1["b"].get<double>();
       auto n = j1["n"].get<unsigned int>();
       std::cout<<"Computing Simpson composite rule between "<<a<<" and "<<b<<" with "<<n<<" intervals\n";
@@ -77,7 +77,7 @@ int main ()
   MPI_Reduce(&local_int, &integral, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   if(my_rank==0)
     {
-      std::cout<<"Integral value "<<integral<<" Computed in "<<clock.wallTimeNow()<<" microsec.\n";
+      std::cout<<"Integral value "<<std::setprecision(16)<<integral<<" Computed in "<<clock.wallTimeNow()<<" microsec.\n";
     }
   MPI_Finalize();
   return 0;

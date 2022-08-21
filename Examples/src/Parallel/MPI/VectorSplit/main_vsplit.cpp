@@ -12,7 +12,7 @@
 void printHelp()
 {
   std::cout<<"Splits a vector and compute some statistics in parallel\n";
-  std::cout<<"Run the code as:\nmpirun -n p -size number_of_elements\n";
+  std::cout<<"Run the code as:\nmpirun -n p main_vsplit -size number_of_elements\n";
   std::cout<<"p: number of processes\nnumber_of_elements: the size of the vector (a big number, default:1e8)";
 }
 

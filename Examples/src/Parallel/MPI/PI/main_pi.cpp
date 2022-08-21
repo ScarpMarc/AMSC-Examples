@@ -1,5 +1,4 @@
 #include <mpi.h>
-#include <omp.h>
 
 #include "GetPot"
 #include <cmath>
@@ -22,13 +21,11 @@ void
 printHelp()
 {
   std::cout << "To run the program\n";
-  std::cout << "mpirun -n num_proc ./main_pi -n <number_of_elemts> -t "
-               "<number_of_threads>\n";
+  std::cout << "mpirun -n num_proc ./main_pi -n <number_of_elemts>";
   std::cout
     << "num_proc: the number of processes used by MPI,\n"
     << "number_of_elemts: The number of elements for the integration, use a "
        "big number. default: 1e9)\n"
-    << "number_of_threads: number of threads in the openMP part. default:2"
     << std::endl;
 }
 /**
@@ -39,8 +36,7 @@ printHelp()
  * number of processes. Finally, the sums computed by each process are added
  * together using a reduction.
  *
- * This example makes use of hybrid shared/distributed parallelization
- * through OpenMP and MPI.
+ * This example makes use of  MPI.
  */
 int
 main(int argc, char **argv)
@@ -56,8 +52,6 @@ main(int argc, char **argv)
   MPI_Comm_size(mpi_comm, &mpi_size);
   unsigned int n;
   bool         stop{false};
-  unsigned int num_t{1u};
-#pragma omp parallel master
   if(mpi_rank == 0)
     {
       GetPot gp(argc, argv);
@@ -67,10 +61,9 @@ main(int argc, char **argv)
           stop = true;
         }
       n = gp.follow(1000000000u, "-n");
-      num_t = gp.follow(2u, "-t");
       std::cout << "Number of Intervals: " << n << " ";
       std::cout << "Number of processes: " << mpi_size
-                << ", number of threads: " << num_t << std::endl;
+                << std::endl;
     }
 
   if(stop)
@@ -85,7 +78,6 @@ main(int argc, char **argv)
 
   double sum = 0.0;
 
-#pragma omp parallel for num_threads(num_t) reduction(+ : sum)
   for(unsigned int i = mpi_rank; i < n; i += mpi_size)
     {
       const double x = h * (i + 0.5);

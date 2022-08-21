@@ -3,16 +3,26 @@
 #include <iostream>
 
 int
-main(int argc, char **argv)
+main()
 {
   int thread_id;
   int n_threads;
-
+  int num_threads;
+  std::cout << "Type me the number of threads you want to use\n";
+  std::cout
+    << "Remember that the system may provide less than the requested\n>";
+  std::cin >> num_threads;
+  if(num_threads < 1)
+    {
+      std::cerr << " Number of threads must be a positive number\n";
+      return 1;
+    }
 /**
  * Fork a team of threads with each thread
  * having a private thread_id variable.
  */
-#pragma omp parallel private(thread_id) shared(n_threads)
+#pragma omp parallel private(thread_id) num_threads(num_threads) \
+  shared(n_threads, num_threads)
   {
     thread_id = omp_get_thread_num();
 
@@ -39,7 +49,9 @@ main(int argc, char **argv)
 #pragma omp single
     {
       n_threads = omp_get_num_threads();
-      std::cout << "Number of threads = " << n_threads << std::endl;
+      std::cout << "Number of threads requested = " << num_threads << std::endl;
+      std::cout << "Number of threads obtained  = " << n_threads << std::endl;
+      std::cout << " -- message printed by thread n."<<omp_get_thread_num()<<" --\n";
     }
   }
 

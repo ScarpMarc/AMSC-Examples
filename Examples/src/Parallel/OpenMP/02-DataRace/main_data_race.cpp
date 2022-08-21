@@ -4,7 +4,7 @@
 #include <vector>
 
 int
-main(int argc, char **argv)
+main()
 {
   const size_t n = 10;
 
@@ -39,8 +39,9 @@ main(int argc, char **argv)
     }
 
   int thread_id;
-  int n_threads;
-#pragma omp parallel shared(a, b, n_threads) private(thread_id)
+  int n_threads = 8; // I ask 8 threads
+#pragma omp parallel shared(a, b, n_threads) private(thread_id) \
+  num_threads(n_threads)
   {
     thread_id = omp_get_thread_num();
 
@@ -53,12 +54,12 @@ main(int argc, char **argv)
     }
 #pragma omp barrier
 
-#pragma omp for // schedule(dynamic, 6)
+#pragma omp for // schedule(dynamic, 2)
     for(size_t i = 0; i < n - 1; ++i)
       {
         /**
          * Possible data race: if another thread overwrites a[i + 1]
-         * (or a[i - 1]) before the current thread computes a[i],
+         *  before the current thread computes a[i],
          * the result will likely be wrong.
          */
         a[i] = a[i + 1] + b[i];
@@ -80,6 +81,7 @@ main(int argc, char **argv)
     }
 
   std::cout << std::endl
+            << "Sum of the a[i]:\n"
             << "Serial   result: " << serial_checksum << std::endl
             << "Parallel result: " << parallel_checksum << std::endl;
 }
