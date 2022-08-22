@@ -6,8 +6,8 @@
  */
 #include <iostream>
 #include <string>
-#include "VectorUtil.hpp"//namespace vectorUtil
 #include <mpi.h>
+#include <VectorUtil.hpp>//namespace vectorUtil
 #include "GetPot"
 #include "chrono.hpp"
 void printHelp()

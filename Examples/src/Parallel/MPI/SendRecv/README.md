@@ -27,7 +27,7 @@ E= anlog(n)/(panlog(n/p))=log(n)/(p log(n/p)) ~  1/p (for large n)
 
 Therefore, it may be convenient only for small p. It is not a good algorithm since it scales very badly. It is here only to schow a simple implementation of `MPI_Sendrecv` and also a few c++ tricks.
 
-A more interesting algorithm is parallel quicksort, whose message passing implementation is rather heavy since it requires a lot of communication. It is more suited for a shared memory environment. 
+A more interesting algorithm is parallel quicksort, whose message passing implementation is rather heavy since it requires a lot of communication. It is more suited for a shared memory environment and indeed it is reported in `Parallel/OpenMP/Sort`. 
 
 The code can be compiled in two ways
 
