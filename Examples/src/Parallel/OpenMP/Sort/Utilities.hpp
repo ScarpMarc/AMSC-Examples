@@ -153,7 +153,7 @@ int partition(int p, int r, std::vector<double>& data){
 }
 
 /*!
- * Sequantial implementation of quicksort
+ * Sequential implementation of quicksort
  * @tparam T The type of the vector's elements.
  * @param p The left index
  * @param r The right index

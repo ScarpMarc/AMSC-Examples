@@ -71,8 +71,6 @@ MPI_CXX=$mkMpiCCompiler
 MPI_RUN=mpirun --use-hwthread-cpus
 
 
-
-
 # Since we are only using c++ I set the linker LINK.o for object files
 # so that it uses the c++ compiler. Make has no separate macro for the linker!
 LINK.o = $(CXX) $(LDFLAGS) $(TARGET_ARCH)

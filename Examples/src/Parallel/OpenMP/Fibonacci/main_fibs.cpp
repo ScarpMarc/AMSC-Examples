@@ -17,6 +17,8 @@ printHelp()
     << "num_threads: number of threads requested (def. 2),\n"
     << "task_limit when the parallel code computes fib(n)\n<<"
     " with n<task_limit it resorts to the serial version (def 1)\n"
+    std::cout<<"** Compile with make parallel_cpp if you want to test\n";
+    std::cout<<"also the parallel std::sort algorithm\n";
     << std::endl;
 }
 int
@@ -46,6 +48,15 @@ main(int argc, char **argv)
       auto scalar_time=clock.wallTime();
       std::cout<<"done\n";
 
+       std::cout<<"Scalar non recursive version\n";
+       Fibonacci::Fibonacci_nonrec f_nonrec;
+       clock.start();
+       auto res_nonrec=f_nonrec.compute(n);
+       clock.stop();
+       auto nonrec_time=clock.wallTime();
+       std::cout<<"done\n";
+
+
       std::cout<<"Parallel version\n";
       Fibonacci::Fibonacci f;
       clock.start();
@@ -55,8 +66,9 @@ main(int argc, char **argv)
       std::cout<<"done\n";
 
       std::cout<<"Results:\n";
-      std::cout<<"Serial   version, value="<<res_s[n]<<" Time:"<<scalar_time<<"microsec\n";
-      std::cout<<"Parallel version, value="<<res[n]<<" Time:"<<parallel_time<<"microsec\n";
+      std::cout<<"Serial    version, value="<<res_s[n]<<" Time:"<<scalar_time<<"microsec\n";
+      std::cout<<"Serial nr version, value="<<res_nonrec[n]<<" Time:"<<nonrec_time<<"microsec\n";
+      std::cout<<"Parallel  version, value="<<res[n]<<" Time:"<<parallel_time<<"microsec\n";
     }
 
 }

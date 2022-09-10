@@ -46,12 +46,16 @@ return fibs;
 
 Note the use of some namespace inline variables. A variable is declared inline when is defined in a header file and you want to avoid problems with the one definition rule (since C++17).
 
-The code is in fact higly inefficient, lets see why. Each task has to do very little work (an addition of two integers!), and (if we ignore the `if (n>par_limit)` clause) the computation of `compute(n)` generates `2^(n-1)` tasks!.
-The overhead of taks creation and destruction may exceed greatly the advantage of parallel computations. Moreover, differently than the example in forlder `Sort` we have a `taskwait` clause thet obliges sincronysation of each couple of tasks.
+The parallel code is in fact **higly inefficient**, let's see why. Each task has to do very little work (an addition of two integers!), and (if we ignore the `if (n>par_limit)` clause) the computation of `compute(n)` generates `2^(n-1)` tasks!.
+The overhead of taks creation and destruction may exceed greatly the advantage of parallel computations. Moreover, differently than the example in forlder `Sort` we have a `taskwait` clause that obliges sincronysation of each couple of tasks.
+
+This example shows also a serial nonrecursive implementation. Just to show that recursive algorithm are elegant but may be inefficient!. **The non recursive version is (at least on my computer) the fastest, and by far!**. For two reasons: 1) you do not have the overhead of repeated function calls, 2) in this case, the non recursive version is much more *cache friendly* than the non recursive one, since the iteration access consecutive elements.
+
 
 #What do I learn here#
 - That recursive algorithm may be difficult, if not impossible, to parallelize efficiently, in particular in  machines with 
 a small number of cores. Better results are in the `Sort` folder, where we show a parallel implementation of another recursive algorithm.
+- The serial non recursive version of the algorithm cannot be made parallel, but (at least on ordinary PCs) the fastest, and by far! 
 - A possible use of inline variables in c++
 
 
