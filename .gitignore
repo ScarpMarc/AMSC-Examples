@@ -4,6 +4,8 @@ Examples/Makefile.inc
 *~
 *.so
 *.a
+*.out
+*.vscode
 /Examples/include/GetPot
 /Examples/include/chrono.hpp
 /Examples/include/*.hpp
