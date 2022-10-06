@@ -53,7 +53,7 @@ int main()
       apsc::MatrixPartitioner mpartitioner(num_rows,num_cols,num_tasks);
       for (auto t=0u;t<num_tasks;++t)
         {
-          std::cout<<"Task"<<t<<"Handles rows from "<<mpartitioner.first_row(t)<<"to "
+          std::cout<<"Task "<<t<<" handles rows from "<<mpartitioner.first_row(t)<<"to "
               <<mpartitioner.last_row(t)-1<<". Data buffer locations: "<<mpartitioner.first(t)<<", "
               <<mpartitioner.last(t)-1<<std::endl;
         }

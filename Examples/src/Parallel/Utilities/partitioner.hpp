@@ -207,9 +207,9 @@ namespace apsc
       num_rows{num_rows},num_cols{num_cols},num_tasks{num_tasks}
       {
         if constexpr (O == ORDERINGTYPE::ROWWISE)
-                    {
+                        {
             Partitioner.setPartitioner(num_tasks, num_rows);
-                    }
+                        }
         else
           {
             Partitioner.setPartitioner(num_tasks,num_cols);
@@ -229,9 +229,9 @@ namespace apsc
         num_cols=num_c;
         num_tasks=num_t;
         if constexpr (O == ORDERINGTYPE::ROWWISE)
-                    {
+                        {
             Partitioner.setPartitioner(num_tasks, num_rows);
-                    }
+                        }
         else
           {
             Partitioner.setPartitioner(num_tasks,num_cols);
@@ -246,9 +246,9 @@ namespace apsc
       auto first_row(std::size_t t) const
       {
         if constexpr (O == ORDERINGTYPE::ROWWISE)
-                   {
+                       {
             return Partitioner.first(t);
-                   }
+                       }
         else
           {
             return 0u;
@@ -272,9 +272,9 @@ namespace apsc
       auto first_col(std::size_t t) const
       {
         if constexpr (O == ORDERINGTYPE::ROWWISE)
-                   {
+                       {
             return 0u;
-                   }
+                       }
         else
           {
             return Partitioner.first(t);
@@ -300,9 +300,9 @@ namespace apsc
       auto first(std::size_t t) const
       {
         if constexpr (O == ORDERINGTYPE::ROWWISE)
-                   {
+                       {
             return Partitioner.first(t)*num_cols;
-                   }
+                       }
         else
           {
             return Partitioner.first(t)*num_rows;
@@ -329,7 +329,10 @@ namespace apsc
       auto
       loc(std::size_t row, std::size_t col) const
       {
-        return Partitioner.loc(row);
+        if constexpr (O == ORDERINGTYPE::ROWWISE)
+          return Partitioner.loc(row);
+        else
+          return Partitioner.loc(col);
       }
       /*!
        * The number of tasks
