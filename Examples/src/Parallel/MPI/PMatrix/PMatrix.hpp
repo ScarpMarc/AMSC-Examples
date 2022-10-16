@@ -9,9 +9,9 @@
 #define AMSC_EXAMPLES_EXAMPLES_SRC_PARALLEL_MPI_PMATRIX_PMATRIX_HPP_
 #include <vector>
 #include <mpi.h>
-#include "partitioner.hpp"
+#include "partitioner.hpp" // in Parallel/Utilities
 #include "mpi_utils.hpp" // for MPI_SIZE_T and mpi_typeof()
-#include "Matrix.hpp"
+#include "Matrix.hpp" // in Matrix/
 namespace apsc
 {
   /*!

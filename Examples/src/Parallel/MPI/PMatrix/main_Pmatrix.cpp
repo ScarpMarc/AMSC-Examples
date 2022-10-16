@@ -6,6 +6,7 @@
  */
 #include <iostream>
 #include "PMatrix.hpp"
+#include "chrono.hpp" // my chrono in Utilities
 #include <mpi.h>
 int main()
 {
@@ -129,6 +130,51 @@ int main()
          residual+=(exact[i]-result[i])*(exact[i]-result[i]);
        std::cout<<"Residual="<<residual<<std::endl;
      }
+   MPI_Barrier(mpi_comm);
+
+   if(mpi_rank==0)
+     std::cout<<"\nNow a more serious test"<<std::endl;
+   Timings::Chrono clock;
+   constexpr std::size_t N=1500;
+   RowMatrix A;
+   std::vector<double> uno(N,1.0);
+   double time_scalar;
+   double time_parallel;
+   double time_setup;
+   if(mpi_rank==0)
+     {
+       A.resize(N,N);
+       A.fillRandom();// a random NxN matrix
+       clock.start();
+       result = A*uno;
+       clock.stop();
+       time_scalar=clock.wallTime();
+       clock.start();
+     }
+   MPI_Barrier(mpi_comm);
+   apsc::PMatrix<RowMatrix> Ap;
+   Ap.setup(A, mpi_comm);
+   if(mpi_rank==0)
+     {
+       clock.stop();
+       time_setup=clock.wallTime();
+       clock.start();
+     }
+   MPI_Barrier(mpi_comm);
+   Ap.product(uno);
+   Ap.collectGlobal(result);
+   if(mpi_rank==0)
+     {
+       clock.stop();
+       time_parallel=clock.wallTime();
+       std::cout<<"Scalar time="<<time_scalar<<" Setup time="<<time_setup<<" Parallel product time="<<time_parallel<<std::endl;
+       std::cout<<"Including setup: Speed-up="<<time_scalar/(time_setup+time_parallel)<<
+           " Efficiency="<<(1./mpi_size)*time_scalar/(time_setup+time_parallel)<<std::endl;
+       std::cout<<"Excluding setup: Speed-up="<<time_scalar/time_parallel<<
+            " Efficiency="<<(1./mpi_size)*time_scalar/time_parallel<<std::endl;
+     }
+
+
 
   //
 

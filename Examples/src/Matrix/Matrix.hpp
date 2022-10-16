@@ -182,6 +182,16 @@ public:
    */
   void fillRandom();
 
+  /*!
+   * Clears the matrix completely and frees memory
+   */
+  void clear()
+  {
+    nRows=0u;
+    nCols=0u;
+    buffer.clear();
+    buffer.shrink_to_fit();
+  }
 protected:
   std::size_t         nRows = 0u;
   std::size_t         nCols = 0u;
