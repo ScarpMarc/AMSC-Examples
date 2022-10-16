@@ -28,7 +28,13 @@ In `partition.hpp` you have two classes that implements the two partitioning tec
 
 In the same `partition.hpp` file, we have a template function, `counts_and_displacements()`, that takes a valid partitioner and returns the corresponding `counts` and `displacements` vectors, ready to be used in a `MPI_Gatherv` or `MPI_Scatterv`.
 
+## mpi_utils ##
+A set of utilities taken from the Muster code developed at Lawrence Livermore Labs. For details, see http://github.com/LLNL/muster. Take note of the licence statement in the code.
+
+In particular it defines `MPI_SIZE_T`, useful when you want to send object of std::size_t type. 
+
+
 
 #Instructions#
 
-If you just type `make all`, or simply `'make`, you compile a test code for the partitioner. If you then do `make install` the content of this folder goes in the correct `include` folder to be available for other examples.
+If you just type `make all`, or simply `make`, you compile a test code for the partitioner. **If you do `make install` the content of this folder goes in the correct `include` folder and will be available for other examples.**

@@ -86,7 +86,7 @@ int main(int argc, char **argv)
           minmax_from_local={std::min(minmax_from_local[0],all_minmax[i][0]),std::max(minmax_from_local[1],all_minmax[i][1])};
         }
       mean_from_local/=n;
-      // for a test, compute the same quantities form the global values
+      // for validation, compute the same quantities from the global values
       auto mean_from_global=utilities::mean(myVector);
       auto minmax_from_global=utilities::minmax(myVector);
       std::cout<<"Time taken: "<<millisec<<" milliseconds\n";
