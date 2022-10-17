@@ -156,25 +156,25 @@ namespace apsc
    * displacements as needed for MPI gatherv or scatterv routines
    * @tparam Partitioner The type of a partitioner
    * @param partitioner The partitioner
-   * @return An array with counts and displacements
+   * @return An array with counts and displacements. in vectors of int because this is what MPI wants!
    */
   template <class Partitioner>
-  std::array<std::vector<std::size_t>, 2>
+  std::array<std::vector<int>, 2>
   counts_and_displacements(Partitioner const &partitioner)
   {
     auto num_tasks = partitioner.get_NumTasks();
-    std::vector<std::size_t> counts;
-    std::vector<std::size_t> displacements;
+    std::vector<int> counts;
+    std::vector<int> displacements;
     counts.reserve(num_tasks);
     displacements.reserve(num_tasks);
     for(auto i = 0u; i < num_tasks; ++i)
       {
-        counts.emplace_back(partitioner.last(i) - partitioner.first(i));
+        counts.emplace_back(static_cast<int>(partitioner.last(i) - partitioner.first(i)));
       }
-    displacements.emplace_back(0u);
+    displacements.emplace_back(0);
     for(auto i = 1u; i < num_tasks; ++i)
       {
-        displacements.emplace_back(displacements.back() + counts[i - 1u]);
+        displacements.emplace_back(static_cast<int>(displacements.back() + counts[i - 1u]));
       }
     return {counts, displacements};
   }
@@ -261,7 +261,10 @@ namespace apsc
        */
       auto last_row(std::size_t t) const
       {
-        return this->first_row(t+1);
+        if constexpr (O == ORDERINGTYPE::ROWWISE)
+            return this->first_row(t+1);
+        else
+          return num_rows;
       }
       /*!
        * The first column associated to task t
@@ -288,7 +291,12 @@ namespace apsc
        */
       auto last_col(std::size_t t) const
       {
-        return this->first_col(t+1);
+        if constexpr (O == ORDERINGTYPE::ROWWISE)
+        {
+            return num_cols;
+        }
+        else
+          return this->first_col(t+1);
       }
 
       /*!
@@ -307,6 +315,23 @@ namespace apsc
           {
             return Partitioner.first(t)*num_rows;
           }
+      }
+
+      /*!
+       * Returns the number of rows and columns for each task, given the number of tasks.
+       * @param num_procs The number of tasks
+       * @return and array with the number of rows and columns stored in two vectors
+       */
+      std::array<std::vector<std::size_t>,2> getLocalRowsAndCols(std::size_t num_procs)const
+      {
+        std::vector<std::size_t> rows(num_procs);
+        std::vector<std::size_t> cols(num_procs);
+        for (std::size_t i=0u;i<num_procs;++i)
+          {
+            rows[i]=last_row(i)-first_row(i);
+            cols[i]=last_col(i)-first_col(i);
+          }
+        return {rows,cols};
       }
 
       /*!
