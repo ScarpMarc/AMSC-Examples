@@ -85,6 +85,12 @@ main(int argc, char **argv)
     }
 
   double pi = h * sum;
+
+  // Reduction necessary to get the final result.
+  // MPI_IN_PLACE specifies that the input and output buffer are the same!
+  // If you want the local pi and global pi computation be kept in different places
+  // see the comment below
+
   MPI_Allreduce(MPI_IN_PLACE, &pi, 1, MPI_DOUBLE, MPI_SUM, mpi_comm);
 
   // The previous lines could be replaced by, e.g.:
@@ -100,13 +106,14 @@ main(int argc, char **argv)
 
   // Trick to get output sorted by rank id.
   MPI_Barrier(mpi_comm);
-  for(int rank = 0; rank < mpi_size; ++rank)
+  int rank=0;
+  while (rank < mpi_size)
     {
       if(mpi_rank == rank)
         {
           toc("Time elapsed on rank " + std::to_string(mpi_rank) + ": ");
         }
-
+      ++rank;
       MPI_Barrier(mpi_comm);
     }
 
