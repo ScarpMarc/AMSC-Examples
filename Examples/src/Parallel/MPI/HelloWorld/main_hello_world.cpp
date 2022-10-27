@@ -46,7 +46,7 @@ main(int argc, char **argv)
   MPI_Get_processor_name(proc_name, &name_length);
 
   std::cout << "Hello world! This is rank " << mpi_rank << " out of "
-            << mpi_size << " processors, on " << proc_name << "." << std::endl;
+            << mpi_size << " processors, on " << proc_name << "."<< std::endl;
 
   /**
    * Finalize MPI.
