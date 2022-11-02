@@ -59,7 +59,8 @@ int main(int argc, char **argv)
   MPI_Bcast(&n,1,MPI_INT,0,mpi_comm);
   // Build the communication pattern. I do it here and not just in the root process since I
   // need some of the data also locally and so it is cheaper
-  // compute partition
+  // compute block partition directly
+  // NOTE: I could have used the utility in Parallel/partioner.hpp
    auto chunk = n/mpi_size;
    auto rest  = n%mpi_size;
    for (auto i=0;i<mpi_size;++i)

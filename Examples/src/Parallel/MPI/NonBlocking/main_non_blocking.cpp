@@ -35,7 +35,7 @@ main(int argc, char **argv)
 
   std::vector<double> to_receive(100);
 
-  const int tag_send = (mpi_rank == 0) ? 10 : 20;
+  bconst int tag_send = (mpi_rank == 0) ? 10 : 20;
   const int tag_receive = (mpi_rank == 0) ? 20 : 10;
 
   const int partner_rank = !mpi_rank; // 0 --> 1, 1 --> 0.
