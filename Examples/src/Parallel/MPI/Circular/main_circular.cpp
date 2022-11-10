@@ -29,12 +29,13 @@ main(int argc, char **argv)
 
   const unsigned int num_iterations = 4;
 
-
-  const int partner_send = (mpi_rank+1)%mpi_size; // 0 --> 1, 1 --> 2.. p->0
+// partner to which I send the message
+  int partner_send = (mpi_rank+1)%mpi_size; // 0 --> 1, 1 --> 2.. p->0
+// partner from which I receive the message
 // I avoid mpi_rank-1 since maybe I have defined mpi_rank as unsigned!
 // It is not this case, but here I show how to avoid a possible nasty
 // mistake
-  const int partner_receive = (mpi_rank+mpi_size-1)%mpi_size; // 1 --> 0, 2 --> 1.. p->0
+  int partner_receive = (mpi_rank+mpi_size-1)%mpi_size; // 1 --> 0, 2 --> 1.. p->0
 
   // The MPI_Status struct contains the following members:
   // MPI_SOURCE, MPI_TAG, MPI_ERROR.
@@ -44,7 +45,8 @@ main(int argc, char **argv)
   // I use immediate return send to avoid
   // deadlock. Alternative (more elegant): use
   // MPI_Sendrecv to couple sends and receives
-  MPI_Request request; // to verify when send has ended
+
+  MPI_Request request; // to verify when sending has ended
   for(unsigned int i = 0; i < num_iterations; ++i)
     {
       send_data=100*i+mpi_rank;
@@ -54,6 +56,10 @@ main(int argc, char **argv)
                     << "." << std::endl;      
       MPI_Recv(&receive_data, 1, MPI_INT, partner_receive, 0, mpi_comm,
                &status);
+      // The solution with MPI_Sendrecv
+      //MPI_Sendrecv(&send_data, 1, MPI_INT,partner_send,0,
+      //             &receive_data, 1, MPI_INT, partner_receive,0,mpi_comm,&status);
+
       std::cout << "Iteration ="<<i<<" Rank " << mpi_rank << " <--- rank "
                     << status.MPI_SOURCE << " data = " << receive_data
                     << "." << std::endl;
