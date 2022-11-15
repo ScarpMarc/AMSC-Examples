@@ -20,7 +20,7 @@
 #
 
 # The directory where the examples reside (you HAVE to change this)
-AMSC_ROOT?=/home/forma/Work/HPC_Courses/Material/AMSC-Examples/Examples/
+AMSC_ROOT?=/home/marco/Documents/Uni/4-1/AMfSC/CartellaDocker/AMSC-Examples/Examples/
 # The directory with the Eigen (leave blank if they are in a standard directory)
 mkEigenInc?=/usr/local/include/eigen3/
 EIGEN_DIR=$(mkEigenInc)

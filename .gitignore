@@ -28,3 +28,9 @@ Examples/Makefile.inc
 /Examples/src/Parallel/MPI/VectorSplit/Makefile
 /Examples/src/Parallel/MPI/VectorSplit/main_vsplit
 /Examples/src/Parallel/MPI/VectorSplit/make.dep
+# Ignore all
+*
+# Unignore all with extensions
+!*.*
+# Unignore all dirs
+!*/
